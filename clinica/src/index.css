@@ -1,111 +1,557 @@
+/* =====================================================
+   ÍNDICE
+   1. Variáveis
+   2. Reset e base
+   3. Componentes partilhados (logo, botão, links, eyebrow)
+   4. SITE GERAL (header, hero, secções, cartões, contacto, footer)
+   5. LOGIN (página de acesso profissional)
+   ===================================================== */
+
+
+/* =====================================================
+   1. VARIÁVEIS
+   ===================================================== */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg: #000;
+  --panel: #111110;
+  --text: #f1ede2;
+  --muted: #8d8a80;
+  --line: #1f1f1d;
+  --gold: #c9a53f;
+  --gold-light: #dbb64d;
+  --gold-dark: #7a6526;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --max-width: 1200px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* =====================================================
+   2. RESET E BASE
+   ===================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
 }
 
 body {
-  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+
+/* =====================================================
+   3. COMPONENTES PARTILHADOS
+   ===================================================== */
+
+/* Logo */
+.logo {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.logo__dot {
+  position: absolute;
+  top: 0;
+  right: -0.4rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* Etiqueta pequena com barra dourada */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow__bar {
+  width: 20px;
+  height: 10px;
+  background: var(--gold-dark);
+}
+
+/* Botão */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.15rem 1.4rem;
+  background: var(--gold);
+  border: 0;
+  color: #111;
+  font: 700 0.7rem var(--font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  background: var(--gold-light);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn__arrow {
+  font-size: 0.9rem;
+}
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.btn--outline:hover {
+  background: var(--gold);
+  color: #111;
+}
+
+/* Link com sublinhado */
+.link {
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.link:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.link--light {
+  color: var(--text);
+}
+
+
+/* =====================================================
+   4. SITE GERAL
+   ===================================================== */
+
+/* ----- Header / navegação ----- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem var(--gutter);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.nav__link {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.nav__link:hover,
+.nav__link.is-active {
+  color: var(--text);
+}
+
+.nav__login {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav__login:hover {
+  background: var(--gold);
+  color: #111;
+}
+
+/* ----- Hero ----- */
+.hero {
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  justify-content: center;
+  min-height: calc(100vh - 70px);
+  padding: 4rem var(--gutter);
+  background:
+    radial-gradient(circle at 80% 20%, rgba(201, 165, 63, 0.14), transparent 50%),
+    var(--bg);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.hero__title {
+  max-width: 14ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+.hero__title em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.hero__text {
+  max-width: 48ch;
+  margin: 2rem 0 2.5rem;
+  color: #b9b39f;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* ----- Secções genéricas ----- */
+.section {
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter);
+  border-top: 1px solid var(--line);
+}
+
+.section--alt {
+  background: var(--panel);
+}
+
+.section__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.section__title {
+  max-width: 18ch;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.section__text {
+  max-width: 56ch;
+  color: #b9b39f;
+  line-height: 1.7;
+}
+
+/* ----- Cartões (serviços, etc.) ----- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  margin-top: 3rem;
+  background: var(--line);
+  /* cria as linhas entre cartões */
+  border: 1px solid var(--line);
+}
+
+.card {
+  padding: 2rem;
+  background: var(--bg);
+  transition: background 0.2s;
+}
+
+.section--alt .card {
+  background: var(--panel);
+}
+
+.card:hover {
+  background: #181817;
+}
+
+.card__number {
+  margin-bottom: 2rem;
+  color: var(--gold-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.card__title {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.card__text {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ----- Contacto ----- */
+.contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.contact__label {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.contact__value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* ----- Footer ----- */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem var(--gutter);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+
+/* =====================================================
+   5. LOGIN
+   Tudo dentro de .login para não afetar o site geral
+   ===================================================== */
+
+/* ----- Layout ----- */
+.login {
+  display: grid;
+  grid-template-columns: 1fr minmax(420px, 560px);
+  min-height: 100vh;
+}
+
+/* ----- Lado da marca ----- */
+.login__brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(2rem, 5vw, 4rem);
+  background:
+    radial-gradient(circle at 20% 80%, rgba(201, 165, 63, 0.12), transparent 55%),
+    var(--bg);
+  overflow: hidden;
+}
+
+.brand__word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: rgba(241, 237, 226, 0.92);
+}
+
+.brand__word em {
+  font-style: normal;
+  color: var(--gold-dark);
+}
+
+.brand__foot {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ----- Painel do formulário ----- */
+.login__panel {
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.login__inner {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.login .title {
+  margin-bottom: 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.login .lead {
+  margin-bottom: 2.5rem;
+  color: #b9b39f;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ----- Campos ----- */
+.field {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.2s;
+}
+
+.field:focus-within {
+  border-color: var(--gold);
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.5rem 0 0.9rem;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font: 700 1rem var(--font-body);
+  letter-spacing: 0.04em;
+}
+
+.field input::placeholder {
+  color: #55534d;
+}
+
+/* ----- Manter sessão / recuperar acesso ----- */
+.login .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  font-size: 0.75rem;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--gold);
+}
+
+/* Botão ocupa a largura toda no login */
+.login .btn {
+  width: 100%;
+}
+
+.signup {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+
+/* =====================================================
+   RESPONSIVO
+   ===================================================== */
+@media (max-width: 860px) {
+
+  /* Login: no telemóvel fica só o formulário */
+  .login {
+    grid-template-columns: 1fr;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+  .login__brand {
+    display: none;
   }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  .login__panel {
+    min-height: 100vh;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  /* Site: esconde links, mantém só o botão de acesso */
+  .nav__link {
+    display: none;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
 }
