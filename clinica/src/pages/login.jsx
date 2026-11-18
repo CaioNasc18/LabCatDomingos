@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "../index.css";
+
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -16,11 +18,10 @@ export default function Login() {
             {/* Lado esquerdo: marca */}
             <section className="login__brand" aria-hidden="true">
                 <p className="brand__word">
-                    Pre<em>cisão</em>
+                  <em> Todos os casos.</em>
                     <br />
-                    em cada
-                    <br />
-                    caso.
+                    Um lugar só.
+                    <br/>
                 </p>
             </section>
 

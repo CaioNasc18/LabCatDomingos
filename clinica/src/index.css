@@ -74,43 +74,10 @@ body {
    ===================================================== */
 
 /* Logo */
-.logo {
-  position: relative;
-  display: inline-block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.75rem;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
 
-.logo__dot {
-  position: absolute;
-  top: 0;
-  right: -0.4rem;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-}
 
 /* Etiqueta pequena com barra dourada */
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
 
-.eyebrow__bar {
-  width: 20px;
-  height: 10px;
-  background: var(--gold-dark);
-}
 
 /* Botão */
 .btn {
@@ -141,11 +108,6 @@ body {
   font-size: 0.9rem;
 }
 
-.btn--outline {
-  background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
-}
 
 .btn--outline:hover {
   background: var(--gold);
@@ -174,18 +136,6 @@ body {
    ===================================================== */
 
 /* ----- Header / navegação ----- */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem var(--gutter);
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
-}
 
 .nav {
   display: flex;
@@ -193,30 +143,12 @@ body {
   gap: clamp(1rem, 3vw, 2.5rem);
 }
 
-.nav__link {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  transition: color 0.2s;
-}
 
 .nav__link:hover,
 .nav__link.is-active {
   color: var(--text);
 }
 
-.nav__login {
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition: background 0.2s, color 0.2s;
-}
 
 .nav__login:hover {
   background: var(--gold);
@@ -224,45 +156,14 @@ body {
 }
 
 /* ----- Hero ----- */
-.hero {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: calc(100vh - 70px);
-  padding: 4rem var(--gutter);
-  background:
-    radial-gradient(circle at 80% 20%, rgba(201, 165, 63, 0.14), transparent 50%),
-    var(--bg);
-}
 
-.hero__title {
-  max-width: 14ch;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(3rem, 9vw, 8rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-}
 
 .hero__title em {
   font-style: normal;
   color: var(--gold);
 }
 
-.hero__text {
-  max-width: 48ch;
-  margin: 2rem 0 2.5rem;
-  color: #b9b39f;
-  font-size: 1.05rem;
-  line-height: 1.6;
-}
 
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
 
 /* ----- Secções genéricas ----- */
 .section {
@@ -274,43 +175,11 @@ body {
   background: var(--panel);
 }
 
-.section__inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
 
-.section__title {
-  max-width: 18ch;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-}
 
-.section__text {
-  max-width: 56ch;
-  color: #b9b39f;
-  line-height: 1.7;
-}
 
 /* ----- Cartões (serviços, etc.) ----- */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1px;
-  margin-top: 3rem;
-  background: var(--line);
-  /* cria as linhas entre cartões */
-  border: 1px solid var(--line);
-}
 
-.card {
-  padding: 2rem;
-  background: var(--bg);
-  transition: background 0.2s;
-}
 
 .section--alt .card {
   background: var(--panel);
@@ -320,26 +189,8 @@ body {
   background: #181817;
 }
 
-.card__number {
-  margin-bottom: 2rem;
-  color: var(--gold-dark);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
 
-.card__title {
-  margin-bottom: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
 
-.card__text {
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
 
 /* ----- Contacto ----- */
 .contact {
@@ -349,18 +200,7 @@ body {
   margin-top: 3rem;
 }
 
-.contact__label {
-  margin-bottom: 0.5rem;
-  color: var(--muted);
-  font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
 
-.contact__value {
-  font-size: 1.1rem;
-  font-weight: 700;
-}
 
 /* ----- Footer ----- */
 .site-footer {
@@ -377,99 +217,123 @@ body {
 }
 
 
-/******************LOGIN PAGE******************/
+/* =====================================================
+   5. LOGIN
+   ===================================================== */
+.login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
 
-#center {
+.login__brand {
+  display: flex;
+  align-items: center;
+  padding: var(--gutter);
+  background:
+    radial-gradient(circle at 20% 80%, rgba(201, 165, 63, 0.16), transparent 55%),
+    var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.brand__word {
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.brand__word em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.login__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem var(--gutter);
+}
+
+.login__inner {
+  width: 100%;
+  max-width: 380px;
+}
+
+.title {
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 1.5rem;
 }
 
-#next-steps {
+.field {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.field label {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+.field input {
+  padding: 0.9rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input::placeholder {
+  color: var(--gold-dark);
+}
+
+.field input:focus {
+  border-bottom-color: var(--gold);
+}
+
+.row {
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.check input {
+  accent-color: var(--gold);
+}
+
+.signup {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 
@@ -493,13 +357,5 @@ body {
   }
 
   /* Site: esconde links, mantém só o botão de acesso */
-  .nav__link {
-    display: none;
-  }
 
-  .hero {
-    min-height: auto;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
 }
