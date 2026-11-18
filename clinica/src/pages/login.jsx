@@ -16,11 +16,10 @@ export default function Login() {
             {/* Lado esquerdo: marca */}
             <section className="login__brand" aria-hidden="true">
                 <p className="brand__word">
-                    Pre<em>cisão</em>
                     <br />
-                    em cada
+                    Todos os casos.
                     <br />
-                    caso.
+                    <em>Um só lugar.</em>
                 </p>
             </section>
 

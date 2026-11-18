@@ -817,7 +817,7 @@ body {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -1504,8 +1504,9 @@ body {
   .contact-main > a { font-size: 8vw; overflow-wrap: anywhere; }
   .contact-details { grid-template-columns: 1fr; margin-top: 85px; }
 }
+
 /* =====================================================
-   5. LOGIN
+    LOGIN PAGE
    ===================================================== */
 .login {
   display: grid;
@@ -1516,10 +1517,8 @@ body {
 .login__brand {
   display: flex;
   align-items: center;
-  padding: var(--gutter);
-  background:
-    radial-gradient(circle at 20% 80%, rgba(201, 165, 63, 0.16), transparent 55%),
-    var(--panel);
+  padding: var(--gutter) var(--gutter) var(--gutter) 2;
+  background: var(--bg);
   border-right: 1px solid var(--line);
 }
 
@@ -1541,6 +1540,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 2rem var(--gutter);
+  background: var(--panel);
 }
 
 .login__inner {
