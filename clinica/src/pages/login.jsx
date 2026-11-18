@@ -15,10 +15,6 @@ export default function Login() {
         <main className="login">
             {/* Lado esquerdo: marca */}
             <section className="login__brand" aria-hidden="true">
-                <a className="logo" href="/">
-                    LABO<span className="logo__dot"></span>
-                </a>
-
                 <p className="brand__word">
                     Pre<em>cisão</em>
                     <br />
@@ -26,33 +22,22 @@ export default function Login() {
                     <br />
                     caso.
                 </p>
-
-                <p className="brand__foot">
-                    © 2026 LABO · Laboratório de prótese dentária
-                </p>
             </section>
 
             {/* Lado direito: formulário */}
             <section className="login__panel">
                 <div className="login__inner">
-                    <p className="eyebrow">
-                        <span className="eyebrow__bar"></span>Área reservada
-                    </p>
 
                     <h1 className="title">
-                        Acesso
+                        Área
                         <br />
-                        profissional
+                        Reservada
                     </h1>
 
-                    <p className="lead">
-                        Entre para gerir casos, ficheiros, aprovações e comunicação com o
-                        laboratório.
-                    </p>
 
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="field">
-                            <label htmlFor="email">Email profissional</label>
+                            <label htmlFor="email">E-mail</label>
                             <input
                                 id="email"
                                 name="email"
@@ -87,15 +72,15 @@ export default function Login() {
                                     checked={remember}
                                     onChange={(e) => setRemember(e.target.checked)}
                                 />
-                                <span>Manter sessão</span>
+                                <span>Lembrar-me</span>
                             </label>
                             <a className="link" href="#">
-                                Recuperar acesso
+                                Esqueceu a palavra-passe?
                             </a>
                         </div>
 
                         <button className="btn" type="submit">
-                            <span>Entrar no backoffice</span>
+                            <span>Entrar</span>
                             <span className="btn__arrow">↗</span>
                         </button>
                     </form>
