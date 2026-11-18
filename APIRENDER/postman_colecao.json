@@ -1,0 +1,552 @@
+{
+ "info": {
+  "name": "API LAB Catarina Domingos",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "variable": [
+  {
+   "key": "base",
+   "value": "http://localhost:3001"
+  },
+  {
+   "key": "token",
+   "value": ""
+  }
+ ],
+ "item": [
+  {
+   "name": "Estado da API",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": []
+    },
+    "auth": {
+     "type": "noauth"
+    }
+   }
+  },
+  {
+   "name": "Login cliente",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/login/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "login"
+     ]
+    },
+    "auth": {
+     "type": "noauth"
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"email\": \"cliente1@exemplo.pt\",\n  \"password\": \"password123\"\n}"
+    }
+   },
+   "event": [
+    {
+     "listen": "test",
+     "script": {
+      "type": "text/javascript",
+      "exec": [
+       "const d = pm.response.json();",
+       "if (d.token) pm.collectionVariables.set('token', d.token);"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Login colaborador",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/login/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "login"
+     ]
+    },
+    "auth": {
+     "type": "noauth"
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"email\": \"colaborador1@laboratorio.pt\",\n  \"password\": \"password123\"\n}"
+    }
+   },
+   "event": [
+    {
+     "listen": "test",
+     "script": {
+      "type": "text/javascript",
+      "exec": [
+       "const d = pm.response.json();",
+       "if (d.token) pm.collectionVariables.set('token', d.token);"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Login administrador",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/login/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "login"
+     ]
+    },
+    "auth": {
+     "type": "noauth"
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"email\": \"admin1@laboratorio.pt\",\n  \"password\": \"password123\"\n}"
+    }
+   },
+   "event": [
+    {
+     "listen": "test",
+     "script": {
+      "type": "text/javascript",
+      "exec": [
+       "const d = pm.response.json();",
+       "if (d.token) pm.collectionVariables.set('token', d.token);"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Sync",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/sync/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "sync"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "Criar encomenda (cliente)",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/encomendas/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "encomendas"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"paciente\": {\n    \"nome\": \"João Silva\",\n    \"idade\": 40,\n    \"sexo\": \"M\"\n  },\n  \"cedula_medico\": \"C-1234\",\n  \"observacoes\": \"Nota extra da clínica\",\n  \"trabalhos\": [\n    {\n      \"id_tipo_trabalho\": 1,\n      \"natureza\": \"Físico\",\n      \"cor\": \"A2\",\n      \"dentes\": [\n        11,\n        21\n      ]\n    }\n  ]\n}"
+    }
+   }
+  },
+  {
+   "name": "Assumir etapa",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/trabalhos/1/assumir",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "trabalhos",
+      "1",
+      "assumir"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"id_etapa\": 1\n}"
+    }
+   }
+  },
+  {
+   "name": "Concluir etapa e encaminhar",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/execucoes/1/concluir",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "execucoes",
+      "1",
+      "concluir"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"id_colaborador_seguinte\": 1,\n  \"id_etapa_seguinte\": 2,\n  \"observacoes\": \"Segue para impressão\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Concluir etapa e deixar disponível",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/execucoes/1/concluir",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "execucoes",
+      "1",
+      "concluir"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"observacoes\": \"Pronto\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Colocar em espera",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/trabalhos/1/estado",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "trabalhos",
+      "1",
+      "estado"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"estado\": \"Em espera\",\n  \"justificacao\": \"Falta o modelo\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Retomar",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/trabalhos/1/estado",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "trabalhos",
+      "1",
+      "estado"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"estado\": \"Em processamento\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Concluir trabalho",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/trabalhos/1/estado",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "trabalhos",
+      "1",
+      "estado"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"estado\": \"Concluído\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Nova nota",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/trabalhos/1/notas",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "trabalhos",
+      "1",
+      "notas"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"conteudo\": \"Modelo com bolha\",\n  \"visibilidade\": \"interna\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Marcar notificações como lidas",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/notificacoes/lidas",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "notificacoes",
+      "lidas"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{}"
+    }
+   }
+  },
+  {
+   "name": "Logout",
+   "request": {
+    "method": "DELETE",
+    "header": [
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{base}}/logout/",
+     "host": [
+      "{{base}}"
+     ],
+     "path": [
+      "logout"
+     ]
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{token}}",
+       "type": "string"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}
