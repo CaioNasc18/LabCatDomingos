@@ -1,0 +1,74 @@
+{% extends "core/base.html" %}
+{% block titulo %}Nova encomenda{% endblock %}
+{% block migalhas %}{% if e_admin %}Encomendas · em nome do cliente{% else %}Área do cliente{% endif %}{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Nova encomenda</h1>
+    <p>{% if e_admin %}Criada pelo administrador em nome do cliente.{% else %}O laboratório recebe o pedido e define a data limite ao aceitá-lo.{% endif %}</p></div>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="lado">
+    <div>
+      <section class="cartao">
+        <h2>Entidade principal</h2>
+        {% if e_admin %}
+        <div class="campo"><label for="cliente" class="obrigatorio">Cliente</label>
+          <select id="cliente" name="cliente" required>
+            <option value="">Selecionar cliente…</option>
+            {% for c in clientes %}<option value="{{ c.id_cliente }}"{% if c.id_cliente|stringformat:"s" == dados.cliente %} selected{% endif %}>{{ c.nome }} · NIF {{ c.nif }}</option>{% endfor %}
+          </select></div>
+        {% endif %}
+        <div class="grelha-2">
+          <div class="campo"><label for="paciente">Paciente</label>
+            <input id="paciente" type="text" name="paciente" value="{{ dados.paciente }}" placeholder="Nome do paciente"></div>
+          <div class="campo"><label for="cedula">Médico responsável · cédula profissional</label>
+            <input id="cedula" type="text" name="cedula" value="{{ dados.cedula }}" class="mono"></div>
+          <div class="campo"><label for="data_nascimento">Data de nascimento</label>
+            <input id="data_nascimento" type="date" name="data_nascimento" value="{{ dados.data_nascimento }}">
+            <div class="ajuda">A aplicação mostra a idade calculada.</div></div>
+          <div class="campo"><label for="sexo">Sexo</label>
+            <select id="sexo" name="sexo">
+              <option value="">—</option>
+              <option{% if dados.sexo == "Feminino" %} selected{% endif %}>Feminino</option>
+              <option{% if dados.sexo == "Masculino" %} selected{% endif %}>Masculino</option>
+              <option{% if dados.sexo == "Outro" %} selected{% endif %}>Outro</option>
+            </select></div>
+          <div class="campo"><label for="data_consulta">Data da próxima consulta</label>
+            <input id="data_consulta" type="date" name="data_consulta" value="{{ dados.data_consulta }}"></div>
+        </div>
+      </section>
+
+      <section class="cartao">
+        <div class="cartao-titulo"><h2>Trabalhos</h2><button type="button" class="btn secundario pequeno" id="adicionar-trabalho">+ Adicionar novo trabalho</button></div>
+        <div id="trabalhos">
+          {% for t in trabalhos %}{% include "encomendas/_trabalho_form.html" with t=t %}{% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <section class="cartao">
+        <h2>Notas clínicas</h2>
+        <div class="campo"><label for="observacoes" class="sr">Notas clínicas</label>
+          <textarea id="observacoes" name="observacoes" rows="6" placeholder="Informação útil para o laboratório">{{ dados.observacoes }}</textarea></div>
+        {% if e_admin %}
+        <div class="campo"><label>Partilha dos ficheiros enviados</label>
+          <div class="segmentos">
+            <label><input type="radio" name="visibilidade" value="cliente"{% if dados.visibilidade != "interna" %} checked{% endif %}><span>Disponibilizar ao cliente</span></label>
+            <label><input type="radio" name="visibilidade" value="interna"{% if dados.visibilidade == "interna" %} checked{% endif %}><span>Conteúdo interno</span></label>
+          </div></div>
+        {% endif %}
+      </section>
+      <section class="cartao">
+        <h2>Acompanhamento</h2>
+        <p class="soft small" style="margin:0 0 14px">O sistema regista automaticamente os principais marcos do trabalho: criação, aceitação, início e conclusão das etapas e finalização.</p>
+        <button class="btn" type="submit" style="width:100%">Criar encomenda</button>
+      </section>
+    </aside>
+  </div>
+</form>
+
+<template id="modelo-trabalho">{% include "encomendas/_trabalho_form.html" with t=modelo %}</template>
+{% endblock %}

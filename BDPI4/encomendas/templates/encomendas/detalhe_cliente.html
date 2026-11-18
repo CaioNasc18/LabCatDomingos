@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block titulo %}{{ e.codigo }}{% endblock %}
+{% block migalhas %}Área do cliente · {{ e.codigo }}{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'encomendas:minhas' %}">← As minhas encomendas</a>
+<div class="cabecalho">
+  <div>
+    <h1 class="mono">{{ e.codigo }} <span class="estado {{ e.estado_cliente|estado_css }}" style="vertical-align:middle">{{ e.estado_cliente }}</span></h1>
+    <p>{% if e.paciente %}{{ e.paciente }}{% if e.idade_paciente is not None %} · {{ e.idade_paciente }} anos{% endif %} · {% endif %}criada a <span class="mono">{{ e.data_criacao|date:"d/m/Y" }}</span>{% if e.data_limite %} · prazo <span class="mono">{{ e.data_limite|date:"d/m/Y" }}</span>{% endif %}</p>
+  </div>
+</div>
+
+<div class="grelha-2">
+  {% for t in trabalhos %}
+  <section class="cartao">
+    <div class="cartao-titulo"><h2>{{ t.tipo_trabalho }}</h2><span class="estado {{ t.estado_cliente|estado_css }}">{{ t.estado_cliente }}</span></div>
+    <dl class="campos" style="margin-bottom:14px">
+      <dt>Natureza</dt><dd>{{ t.natureza|default:"—" }}</dd>
+      <dt>Cor</dt><dd class="mono">{{ t.cor|default:"—" }}</dd>
+      <dt>Dentes</dt><dd class="mono">{{ t.dentes|default:"—" }}</dd>
+    </dl>
+    {% include "core/_odontograma.html" with nome="" sel=t.sel %}
+  </section>
+  {% endfor %}
+</div>
+
+{% if e.observacoes %}<div class="cartao" style="margin-top:16px"><h2>Notas clínicas</h2><p style="margin:0; white-space:pre-wrap">{{ e.observacoes }}</p></div>{% endif %}
+
+<h2 style="margin-top:28px">Notas</h2>
+{% url 'encomendas:nova_nota' e.id_encomenda as acao_nota %}
+{% include "core/_notas.html" with notas=notas trabalhos=trabalhos acao_url=acao_nota interna=False voltar=request.get_full_path %}
+
+<h2 style="margin-top:28px">Fotografias e ficheiros</h2>
+{% url 'encomendas:novos_anexos' e.id_encomenda as acao_anexo %}
+{% include "core/_anexos.html" with anexos=anexos trabalhos=trabalhos acao_url=acao_anexo interna=False voltar=request.get_full_path extensoes=extensoes %}
+{% endblock %}

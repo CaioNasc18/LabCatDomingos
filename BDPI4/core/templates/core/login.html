@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% block titulo %}Entrar{% endblock %}
+{% block corpo %}
+<main class="login-pagina">
+  <div class="login-cartao">
+    <div class="cartao" style="padding: 28px">
+      <div class="logo"><b>LAB</b> Catarina Domingos</div>
+      <p class="tagline">Próteses de precisão, conectadas.</p>
+      {% for m in messages %}<div class="mensagem {{ m.tags }}" role="alert">{{ m }}</div>{% endfor %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" name="email" autocomplete="username" required autofocus>
+        </div>
+        <div class="campo">
+          <label for="password">Palavra-passe</label>
+          <input id="password" type="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn" type="submit">Entrar</button>
+      </form>
+    </div>
+    <p class="soft small" style="text-align:center; margin-top:14px">Backoffice do laboratório · acesso reservado</p>
+  </div>
+</main>
+{% endblock %}

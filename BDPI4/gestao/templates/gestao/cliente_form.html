@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% block titulo %}{% if atual %}{{ atual.nome }}{% else %}Novo cliente{% endif %}{% endblock %}
+{% block migalhas %}Gestão · Clientes{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'gestao:clientes' %}">← Clientes</a>
+<div class="cabecalho"><div><h1>{% if atual %}{{ atual.nome }}{% else %}Novo cliente{% endif %}</h1>
+  <p>{% if atual %}Dados do cliente e da conta de acesso.{% else %}Cria a conta de acesso do cliente (perfil Cliente).{% endif %}</p></div></div>
+<form class="cartao" method="post" style="max-width:760px">
+  {% csrf_token %}
+  <div class="grelha-2">
+    <div class="campo"><label for="nome" class="obrigatorio">Nome da clínica / entidade</label><input id="nome" type="text" name="nome" value="{{ d.nome|default:'' }}" required></div>
+    <div class="campo"><label for="nif" class="obrigatorio">NIF</label><input id="nif" type="text" name="nif" value="{{ d.nif|default:'' }}" class="mono" maxlength="20" required></div>
+    <div class="campo"><label for="email" class="obrigatorio">E-mail (acesso)</label><input id="email" type="email" name="email" value="{{ d.email|default:'' }}" required></div>
+    <div class="campo"><label for="telefone">Telefone</label><input id="telefone" type="tel" name="telefone" value="{{ d.telefone|default:'' }}"></div>
+    <div class="campo"><label for="tipo_entidade">Tipo de entidade</label><input id="tipo_entidade" type="text" name="tipo_entidade" value="{{ d.tipo_entidade|default:'' }}" placeholder="Ex.: clínica dentária"></div>
+    {% if not atual %}
+    <div class="campo"><label for="password" class="obrigatorio">Palavra-passe inicial</label><input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required><div class="ajuda">Pelo menos 8 caracteres. O cliente pode alterá-la na conta.</div></div>
+    {% endif %}
+  </div>
+  <div class="campo"><label for="morada">Morada</label><textarea id="morada" name="morada" rows="2">{{ d.morada|default:'' }}</textarea></div>
+  <div class="botoes"><button class="btn" type="submit">Guardar</button><a class="btn secundario" href="{% url 'gestao:clientes' %}">Cancelar</a></div>
+</form>
+{% endblock %}

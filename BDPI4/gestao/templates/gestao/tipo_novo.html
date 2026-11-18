@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% block titulo %}Novo tipo de trabalho{% endblock %}
+{% block migalhas %}Gestão · Tipos de trabalho{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'gestao:tipos' %}">← Tipos de trabalho</a>
+<div class="cabecalho"><div><h1>Novo tipo de trabalho</h1><p>Cria o tipo, o seu processo e as etapas.</p></div></div>
+<form class="cartao" method="post" style="max-width:760px">
+  {% csrf_token %}
+  <div class="campo"><label for="nome" class="obrigatorio">Nome</label><input id="nome" type="text" name="nome" value="{{ d.nome }}" required placeholder="Ex.: Coroa metalo-cerâmica"></div>
+  <div class="campo"><label for="descricao">Descrição</label><input id="descricao" type="text" name="descricao" value="{{ d.descricao }}"></div>
+  <div class="campo"><label for="etapas" class="obrigatorio">Etapas (uma por linha)</label>
+    <textarea id="etapas" name="etapas" rows="9" placeholder="Gesso&#10;Impressão 3D&#10;Articulação&#10;…">{{ d.etapas }}</textarea>
+    <div class="ajuda">A ordem só serve para as listar; podem ser feitas por qualquer ordem.</div></div>
+  <div class="campo">
+    <label style="display:flex; gap:8px; align-items:center; color:var(--text)"><input type="checkbox" name="finais" value="1"{% if d.finais %} checked{% endif %}> Acrescentar Faturação e Embalamento e envio final (obrigatórias)</label>
+  </div>
+  <div class="botoes"><button class="btn" type="submit">Criar</button><a class="btn secundario" href="{% url 'gestao:tipos' %}">Cancelar</a></div>
+</form>
+{% endblock %}

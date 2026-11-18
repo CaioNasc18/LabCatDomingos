@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% block titulo %}Conta{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><div><h1>Conta</h1><p>{{ u.perfil }}</p></div></div>
+<div class="grelha-2">
+  <div class="cartao">
+    <h2>{% if u.clinica %}Dados da clínica{% else %}Dados pessoais{% endif %}</h2>
+    <dl class="campos">
+      <dt>Nome</dt><dd>{{ u.clinica|default:u.nome }}</dd>
+      <dt>E-mail</dt><dd>{{ u.email }}</dd>
+      <dt>Telefone</dt><dd>{{ u.telefone|default:"—" }}</dd>
+      {% if u.clinica %}
+      <dt>NIF</dt><dd class="mono">{{ u.nif }}</dd>
+      <dt>Morada</dt><dd>{{ u.morada|default:"—" }}</dd>
+      <dt>Tipo de entidade</dt><dd>{{ u.tipo_entidade|default:"—" }}</dd>
+      {% endif %}
+      <dt>Conta criada</dt><dd class="mono">{{ u.data_criacao|date:"d/m/Y" }}</dd>
+      <dt>Último acesso</dt><dd class="mono">{{ u.ultimo_login|date:"d/m/Y H:i"|default:"—" }}</dd>
+    </dl>
+    {% if resumo %}
+    <hr>
+    <div class="grelha-2">
+      <div class="kpi"><div class="n">{{ resumo.atuais }}</div><div class="r">Trabalhos atuais</div></div>
+      <div class="kpi"><div class="n">{{ resumo.concluidas }}</div><div class="r">Etapas concluídas</div></div>
+    </div>
+    {% endif %}
+  </div>
+  <div class="cartao">
+    <h2>Alterar palavra-passe</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="campo"><label for="atual">Palavra-passe atual</label><input id="atual" type="password" name="atual" autocomplete="current-password" required></div>
+      <div class="campo"><label for="nova">Nova palavra-passe</label><input id="nova" type="password" name="nova" minlength="8" autocomplete="new-password" required><div class="ajuda">Pelo menos 8 caracteres.</div></div>
+      <div class="campo"><label for="repetir">Repetir nova palavra-passe</label><input id="repetir" type="password" name="repetir" minlength="8" autocomplete="new-password" required></div>
+      <button class="btn" type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% block titulo %}Novo colaborador{% endblock %}
+{% block migalhas %}Gestão · Colaboradores{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'gestao:colaboradores' %}">← Colaboradores</a>
+<div class="cabecalho"><div><h1>Novo colaborador</h1><p>Cria a conta de acesso da equipa do laboratório.</p></div></div>
+<form class="cartao" method="post" style="max-width:760px">
+  {% csrf_token %}
+  <div class="grelha-2">
+    <div class="campo"><label for="nome" class="obrigatorio">Nome</label><input id="nome" type="text" name="nome" value="{{ d.nome }}" required></div>
+    <div class="campo"><label for="email" class="obrigatorio">E-mail (acesso)</label><input id="email" type="email" name="email" value="{{ d.email }}" required></div>
+    <div class="campo"><label for="telefone">Telefone</label><input id="telefone" type="tel" name="telefone" value="{{ d.telefone }}"></div>
+    <div class="campo"><label for="password" class="obrigatorio">Palavra-passe inicial</label><input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required><div class="ajuda">Pelo menos 8 caracteres.</div></div>
+  </div>
+  <div class="campo">
+    <label style="display:flex; gap:8px; align-items:center; color:var(--text)"><input type="checkbox" name="administrador" value="1"{% if d.administrador %} checked{% endif %}> Administrador</label>
+    <div class="ajuda">O administrador tem acesso a todo o backoffice e também aparece na lista de colaboradores.</div>
+  </div>
+  <div class="botoes"><button class="btn" type="submit">Criar</button><a class="btn secundario" href="{% url 'gestao:colaboradores' %}">Cancelar</a></div>
+</form>
+{% endblock %}

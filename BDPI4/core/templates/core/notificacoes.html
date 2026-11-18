@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block titulo %}Notificações{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Notificações</h1><p>Mudanças de estado, encaminhamentos, novos pedidos e notas.</p></div>
+  {% if notificacoes_por_ler %}
+  <form method="post" action="{% url 'marcar_todas_lidas' %}">{% csrf_token %}
+    <button class="btn secundario" type="submit">Marcar todas como lidas</button>
+  </form>
+  {% endif %}
+</div>
+<div class="separadores">
+  <a href="?filtro=todas" class="{% if filtro != 'por_ler' %}ativo{% endif %}">Todas</a>
+  <a href="?filtro=por_ler" class="{% if filtro == 'por_ler' %}ativo{% endif %}">Por ler <span class="n">{{ notificacoes_por_ler }}</span></a>
+</div>
+<div class="cartao">
+  {% for n in linhas %}
+  <div class="notificacao{% if not n.lida %} por-ler{% endif %}">
+    <p>{{ n.mensagem }}<br><span class="soft small mono">{{ n.data_criacao|date:"d/m/Y H:i" }}</span></p>
+    {% if not n.lida %}
+    <form method="post" action="{% url 'marcar_lida' n.id_notificacao %}">{% csrf_token %}
+      <input type="hidden" name="voltar" value="{{ request.get_full_path }}">
+      <button class="btn secundario pequeno" type="submit">Marcar como lida</button>
+    </form>
+    {% else %}<span class="soft small">Lida</span>{% endif %}
+  </div>
+  {% empty %}
+  <p class="soft" style="margin:0">Sem notificações.</p>
+  {% endfor %}
+</div>
+{% endblock %}

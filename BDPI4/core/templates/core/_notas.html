@@ -1,0 +1,42 @@
+{# Notas: lista + formulário. Variáveis: notas, trabalhos, acao_url, interna (mostrar escolha de visibilidade), voltar #}
+<div class="lado">
+  <div class="notas">
+    {% for n in notas %}
+    <article class="nota">
+      <header>
+        <span><b style="color:var(--text)">{{ n.autor }}</b> · {{ n.tipo_trabalho }}</span>
+        <span>
+          {% if interna %}{% if n.visibilidade == "cliente" %}<span class="etiqueta ouro">Visível ao cliente</span>{% else %}<span class="etiqueta">Interna</span>{% endif %}{% endif %}
+          <span class="mono">{{ n.data_criacao|date:"d/m/Y H:i" }}</span>
+        </span>
+      </header>
+      <p>{{ n.conteudo }}</p>
+    </article>
+    {% empty %}
+    <p class="soft">Ainda não há notas.</p>
+    {% endfor %}
+  </div>
+  <form class="cartao" method="post" action="{{ acao_url }}">
+    {% csrf_token %}
+    <input type="hidden" name="voltar" value="{{ voltar }}">
+    <h2>Nova nota</h2>
+    {% if trabalhos|length > 1 %}
+    <div class="campo"><label for="nota-trabalho">Trabalho</label>
+      <select id="nota-trabalho" name="trabalho" required>
+        {% for t in trabalhos %}<option value="{{ t.id_encomenda_tipo }}">{{ t.tipo_trabalho }}</option>{% endfor %}
+      </select></div>
+    {% else %}<input type="hidden" name="trabalho" value="{{ trabalhos.0.id_encomenda_tipo }}">{% endif %}
+    <div class="campo"><label for="nota-conteudo" class="obrigatorio">Nota</label>
+      <textarea id="nota-conteudo" name="conteudo" placeholder="Escrever nota…" required></textarea></div>
+    {% if interna %}
+    <div class="campo"><label>Visibilidade</label>
+      <div class="segmentos">
+        <label><input type="radio" name="visibilidade" value="interna" checked><span>Interna</span></label>
+        <label><input type="radio" name="visibilidade" value="cliente"><span>Disponível para cliente</span></label>
+      </div>
+      <div class="ajuda">Notas internas não são visíveis pelo cliente.</div>
+    </div>
+    {% else %}<p class="ajuda" style="margin-top:-6px">A nota fica visível para o laboratório.</p>{% endif %}
+    <button class="btn" type="submit">Guardar nota</button>
+  </form>
+</div>
