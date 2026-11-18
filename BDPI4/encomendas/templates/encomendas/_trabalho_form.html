@@ -1,0 +1,35 @@
+{# Um trabalho na nova encomenda. Variáveis: t (i, tipo, natureza, cor, material, sel), tipos, cores #}
+<section class="trabalho-bloco">
+  <div class="cartao-titulo">
+    <h2 class="numero-trabalho">Trabalho</h2>
+    <button type="button" class="btn secundario pequeno remover-trabalho">Remover</button>
+  </div>
+  <div class="grelha-3">
+    <div class="campo"><label for="tipo-{{ t.i }}" class="obrigatorio">Tipo de trabalho</label>
+      <select id="tipo-{{ t.i }}" name="tipo-{{ t.i }}" required>
+        <option value="">Escolher…</option>
+        {% for tp in tipos %}<option value="{{ tp.id_tipo_trabalho }}"{% if tp.id_tipo_trabalho|stringformat:"s" == t.tipo %} selected{% endif %}>{{ tp.nome }}</option>{% endfor %}
+      </select></div>
+    <div class="campo"><label class="obrigatorio">Natureza do trabalho</label>
+      <div class="segmentos">
+        <label><input type="radio" name="natureza-{{ t.i }}" value="Físico"{% if t.natureza == "Físico" %} checked{% endif %}><span>Físico</span></label>
+        <label><input type="radio" name="natureza-{{ t.i }}" value="Digital"{% if t.natureza != "Físico" %} checked{% endif %}><span>Digital</span></label>
+      </div></div>
+    <div class="campo"><label for="cor-{{ t.i }}">Cor (escala VITA)</label>
+      <select id="cor-{{ t.i }}" name="cor-{{ t.i }}">
+        <option value="">—</option>
+        {% for c in cores %}<option{% if c == t.cor %} selected{% endif %}>{{ c }}</option>{% endfor %}
+      </select></div>
+  </div>
+  <div class="campo"><label class="obrigatorio">Odontograma</label>
+    {% include "core/_odontograma.html" with nome="dentes-"|add:t.i sel=t.sel %}
+  </div>
+  <div class="grelha-2">
+    <div class="campo"><label for="material-{{ t.i }}">Material físico a enviar</label>
+      <input id="material-{{ t.i }}" type="text" name="material-{{ t.i }}" value="{{ t.material }}" placeholder="Ex.: impressão intraoral, modelo">
+      <div class="ajuda">Só se o trabalho for acompanhado de material físico.</div></div>
+    <div class="campo"><label for="ficheiros-{{ t.i }}">Ficheiros e fotografias</label>
+      <input id="ficheiros-{{ t.i }}" type="file" name="ficheiros-{{ t.i }}" multiple>
+      <div class="ajuda">Trabalho digital: adicione o scan em formato STL. Até 250 MB por ficheiro.</div></div>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+{% load core_extras %}{% dentes_fdi as d %}
+{# Odontograma em notação FDI. Variáveis: nome (campo do formulário; vazio = só leitura), sel (conjunto de dentes) #}
+<div class="odontograma" role="group" aria-label="Odontograma">
+  <div class="arcada-rotulo">Arcada superior</div>
+  <div class="arcada">
+    {% for q in d.superior %}{% for n in q %}
+      {% if nome %}<label class="dente{% if forloop.parentloop.last and forloop.first %} meio{% endif %}" title="Dente {{ n }}"><input type="checkbox" name="{{ nome }}" value="{{ n }}"{% if n in sel %} checked{% endif %}><span>{{ n }}</span></label>
+      {% else %}<div class="dente fixo{% if n in sel %} sel{% endif %}" title="Dente {{ n }}">{{ n }}</div>{% endif %}
+    {% endfor %}{% endfor %}
+  </div>
+  <div class="arcada">
+    {% for q in d.inferior %}{% for n in q %}
+      {% if nome %}<label class="dente{% if forloop.parentloop.last and forloop.first %} meio{% endif %}" title="Dente {{ n }}"><input type="checkbox" name="{{ nome }}" value="{{ n }}"{% if n in sel %} checked{% endif %}><span>{{ n }}</span></label>
+      {% else %}<div class="dente fixo{% if n in sel %} sel{% endif %}" title="Dente {{ n }}">{{ n }}</div>{% endif %}
+    {% endfor %}{% endfor %}
+  </div>
+  <div class="arcada-rotulo">Arcada inferior</div>
+</div>

@@ -16,6 +16,8 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-apenas-local-trocar-em-producao")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
+if not DEBUG and SECRET_KEY == "dev-apenas-local-trocar-em-producao":
+    raise RuntimeError("Falta definir SECRET_KEY nas variáveis de ambiente.")
 ALLOWED_HOSTS = [h for h in os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h]
 
 
@@ -23,11 +25,17 @@ INSTALLED_APPS = [
     # sem ORM: nenhuma app do Django que precise de tabelas próprias (migrate)
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "core",
+    "core",          # BD (db.py), login e permissões, base dos templates
+    "dashboard",     # Dashboard geral
+    "encomendas",    # Todas as encomendas, aceitar, alterar estado; encomendas do cliente
+    "trabalhos",     # Trabalhos atribuídos e disponíveis, assumir e concluir etapas
+    "gestao",        # Clientes, colaboradores, utilizadores, tipos de trabalho, etapas, permissões
+    "logs",          # Logs (auditoria)
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",   # serve o CSS/JS em produção (Render)
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -50,6 +58,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.backoffice",   # menu por permissões + notificações por ler
             ],
         },
     },
@@ -100,3 +109,11 @@ USE_I18N = True
 USE_TZ = False  # as colunas são TIMESTAMP sem fuso horário
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"   # python manage.py collectstatic (só em produção)
+
+# Fotografias e ficheiros das encomendas.
+# Em desenvolvimento ficam na pasta media/. No Render o disco é temporário:
+# em produção têm de ir para o armazenamento S3 previsto na arquitetura.
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
+TAMANHO_MAXIMO_FICHEIRO = 250 * 1024 * 1024        # 250 MB, como no protótipo
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024

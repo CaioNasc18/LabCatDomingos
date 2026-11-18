@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block migalhas %}Gestão{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Clientes</h1><p>Clínicas e entidades que fazem encomendas.</p></div>
+  <a class="btn" href="{% url 'gestao:cliente_novo' %}">+ Novo cliente</a>
+</div>
+<form class="filtros" method="get">
+  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar nome ou NIF" aria-label="Pesquisar">
+  <button class="btn secundario" type="submit">Pesquisar</button>
+</form>
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Cliente</th><th>NIF</th><th>Tipo</th><th>Contacto</th><th>Encomendas</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+  {% for c in linhas %}
+  <tr>
+    <td><a href="{% url 'gestao:cliente_editar' c.id_cliente %}">{{ c.nome }}</a></td>
+    <td class="mono">{{ c.nif }}</td>
+    <td>{{ c.tipo_entidade|default:"—" }}</td>
+    <td>{{ c.email }}<br><span class="soft small">{{ c.telefone|default:"" }}</span></td>
+    <td class="mono">{{ c.encomendas }}</td>
+    <td>{% if c.ativo %}<span class="etiqueta ouro">Ativo</span>{% else %}<span class="etiqueta">Inativo</span>{% endif %}</td>
+    <td class="acoes">
+      <form class="inline" method="post" action="{% url 'gestao:ativar_cliente' c.id_cliente %}">{% csrf_token %}
+        <button class="btn secundario pequeno" type="submit">{% if c.ativo %}Desativar{% else %}Ativar{% endif %}</button>
+      </form>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7" class="vazio">Sem clientes.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

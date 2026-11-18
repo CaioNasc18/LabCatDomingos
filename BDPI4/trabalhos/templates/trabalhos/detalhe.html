@@ -1,0 +1,161 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block titulo %}{{ t.codigo }} · {{ t.tipo_trabalho }}{% endblock %}
+{% block migalhas %}Execução · {{ t.codigo }}{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'trabalhos:meus' %}">← Os meus trabalhos</a>
+<div class="cabecalho">
+  <div>
+    <h1>{{ t.tipo_trabalho }} <span class="estado {{ t.estado|estado_css }}" style="vertical-align:middle">{{ t.estado }}</span></h1>
+    <p><span class="mono">{{ t.codigo }}</span> · {{ t.cliente }}{% if t.paciente %} · {{ t.paciente }}{% if t.idade_paciente is not None %} ({{ t.idade_paciente }} anos){% endif %}{% endif %}
+      {% if t.data_limite %} · <span class="mono {{ t.dias|prazo_css }}">prazo {{ t.data_limite|date:"d/m/Y" }} · {{ t.dias|dias }}</span>{% endif %}</p>
+  </div>
+</div>
+
+<nav class="separadores" aria-label="Secções do trabalho">
+  <a href="?tab=execucao" class="{% if separador == 'execucao' %}ativo{% endif %}">Execução</a>
+  <a href="?tab=notas" class="{% if separador == 'notas' %}ativo{% endif %}">Notas<span class="n">{{ notas|length }}</span></a>
+  <a href="?tab=ficheiros" class="{% if separador == 'ficheiros' %}ativo{% endif %}">Fotografias e ficheiros<span class="n">{{ anexos|length }}</span></a>
+  <a href="?tab=historico" class="{% if separador == 'historico' %}ativo{% endif %}">Histórico das etapas<span class="n">{{ execucoes|length }}</span></a>
+</nav>
+
+{% if separador == "execucao" %}
+<div class="lado">
+  <div>
+    {% if minha %}
+    <section class="cartao" style="border-color: color-mix(in srgb, var(--gold) 55%, transparent)">
+      <div class="cartao-titulo"><h2>Etapa atual: {{ minha.etapa }}</h2><span class="soft small mono">iniciada {{ minha.data_inicio|date:"d/m/Y H:i" }}</span></div>
+      <form method="post" action="{% url 'trabalhos:concluir' minha.id_execucao %}">
+        {% csrf_token %}
+        <div class="grelha-2">
+          <div class="campo"><label for="etapa_seguinte">Próxima etapa</label>
+            <select id="etapa_seguinte" name="etapa_seguinte">
+              <option value="">Não definir</option>
+              {% for et in etapas %}{% if et.situacao == "por-fazer" %}<option value="{{ et.id_etapa }}">{{ et.nome }}</option>{% endif %}{% endfor %}
+            </select></div>
+          <div class="campo"><label for="seguinte">Encaminhar para</label>
+            <select id="seguinte" name="seguinte">
+              <option value="">Ninguém (fica disponível)</option>
+              {% for c in colegas %}<option value="{{ c.id_colaborador }}">{{ c.nome }}{% if c.e_administrador %} · administrador{% endif %}</option>{% endfor %}
+            </select>
+            <div class="ajuda">A próxima etapa pode ficar sem colaborador.</div></div>
+        </div>
+        <div class="campo"><label for="observacoes">Observação (opcional)</label>
+          <input id="observacoes" type="text" name="observacoes" placeholder="Ex.: validar contactos proximais antes da prova"></div>
+        <button class="btn" type="submit">Finalizar etapa</button>
+        <span class="soft small" style="margin-left:8px">A conclusão é registada automaticamente.</span>
+      </form>
+    </section>
+    {% endif %}
+
+    <section class="cartao">
+      <div class="cartao-titulo"><h2>Etapas</h2><span class="soft small">{{ feitas }} de {{ etapas|length }} concluídas</span></div>
+      <p class="soft small" style="margin-top:-6px">Podem ser feitas por qualquer ordem.{% if finais_bloqueadas %} A faturação e o envio final ficam disponíveis quando o trabalho for dado como concluído.{% endif %}</p>
+      <ul class="etapas">
+        {% for et in etapas %}
+        <li class="{{ et.situacao }}">
+          <span class="marca" aria-hidden="true"></span>
+          <span>{{ et.nome }}{% if et.obrigatoria %} <span class="etiqueta">obrigatória</span>{% endif %}
+            {% if et.por %}<br><span class="det">{{ et.por }} · <span class="mono">{{ et.inicio|date:"d/m H:i" }}{% if et.fim %} – {{ et.fim|date:"d/m H:i" }}{% endif %}</span></span>{% endif %}</span>
+          <span>
+            {% if et.situacao == "em-curso" %}<span class="det">Em curso</span>
+            {% elif t.estado == "Entregue" or t.estado == "Em espera" or t.estado == "Em avaliação" %}<span class="det">{% if et.situacao == "feita" %}Feita{% endif %}</span>
+            {% elif finais_bloqueadas and et.nome in "Faturação|Embalamento e envio final" %}<button class="btn secundario pequeno" disabled title="Disponível depois de concluir o trabalho">Assumir</button>
+            {% else %}
+            <form class="inline" method="post" action="{% url 'trabalhos:assumir' t.id_encomenda_tipo %}">{% csrf_token %}
+              <input type="hidden" name="etapa" value="{{ et.id_etapa }}">
+              <button class="btn {% if et.situacao == 'feita' %}secundario {% endif %}pequeno" type="submit">{% if et.situacao == "feita" %}Repetir{% else %}Assumir{% endif %}</button>
+            </form>
+            {% endif %}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <aside>
+    <section class="cartao">
+      <h2>Situação do trabalho</h2>
+      {% if t.estado == "Em espera" %}
+      <form method="post" action="{% url 'trabalhos:estado' t.id_encomenda_tipo %}">{% csrf_token %}
+        <input type="hidden" name="estado" value="Em processamento">
+        <div class="campo"><label for="retomar">Observação</label><input id="retomar" name="justificacao" placeholder="Ex.: material recebido"></div>
+        <button class="btn" type="submit">Retomar trabalho</button>
+      </form>
+      {% elif t.estado == "Entregue" %}
+      <p class="soft" style="margin:0">Trabalho entregue.</p>
+      {% elif t.estado == "Em avaliação" %}
+      <p class="soft" style="margin:0">A encomenda ainda não foi aceite.</p>
+      {% else %}
+      <details class="acao">
+        <summary>Colocar em espera</summary>
+        <form class="corpo" method="post" action="{% url 'trabalhos:estado' t.id_encomenda_tipo %}">{% csrf_token %}
+          <input type="hidden" name="estado" value="Em espera">
+          <p class="soft small" style="margin-top:0">A produção é suspensa e o cliente vê o trabalho em espera.</p>
+          <div class="campo"><label for="motivo" class="obrigatorio">Motivo da espera</label>
+            <textarea id="motivo" name="justificacao" required placeholder="Indique o motivo…"></textarea></div>
+          <button class="btn aviso" type="submit">Colocar em espera</button>
+        </form>
+      </details>
+      {% if t.estado != "Concluído" %}
+      <details class="acao">
+        <summary>Concluir trabalho</summary>
+        <form class="corpo" method="post" action="{% url 'trabalhos:estado' t.id_encomenda_tipo %}">{% csrf_token %}
+          <input type="hidden" name="estado" value="Concluído">
+          <p class="soft small" style="margin-top:0">O estado passa a Concluído. A faturação e o envio final ficam disponíveis.</p>
+          <div class="campo"><label for="finais">Observações finais</label>
+            <textarea id="finais" name="justificacao" placeholder="Ex.: controlo de qualidade validado"></textarea></div>
+          <button class="btn" type="submit" data-confirmar="Concluir este trabalho?">Concluir trabalho</button>
+        </form>
+      </details>
+      {% endif %}
+      {% endif %}
+    </section>
+
+    <section class="cartao">
+      <h2>Especificações</h2>
+      <dl class="campos" style="margin-bottom:14px">
+        <dt>Natureza</dt><dd>{{ t.natureza|default:"—" }}</dd>
+        <dt>Cor</dt><dd class="mono">{{ t.cor|default:"—" }}</dd>
+        <dt>Dentes</dt><dd class="mono">{{ t.dentes|default:"—" }}</dd>
+        <dt>Material</dt><dd>{{ t.material_a_enviar|default:"—" }}</dd>
+        <dt>Consulta</dt><dd class="mono">{{ t.data_prevista_consulta|date:"d/m/Y"|default:"—" }}</dd>
+      </dl>
+      {% include "core/_odontograma.html" with nome="" sel=t.sel %}
+      {% if t.observacoes %}<hr><h3>Notas clínicas</h3><p class="small" style="margin:0; white-space:pre-wrap">{{ t.observacoes }}</p>{% endif %}
+    </section>
+  </aside>
+</div>
+
+{% elif separador == "notas" %}
+{% url 'encomendas:nova_nota' t.id_encomenda as acao %}
+{% include "core/_notas.html" with notas=notas trabalhos=trabalhos acao_url=acao interna=True voltar=request.get_full_path %}
+
+{% elif separador == "ficheiros" %}
+{% url 'encomendas:novos_anexos' t.id_encomenda as acao %}
+{% include "core/_anexos.html" with anexos=anexos trabalhos=trabalhos acao_url=acao interna=True voltar=request.get_full_path extensoes=extensoes %}
+
+{% elif separador == "historico" %}
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Etapa</th><th>Colaborador</th><th>Início</th><th>Fim</th><th>Duração</th><th>Encaminhado</th></tr></thead>
+  <tbody>
+  {% for x in execucoes %}
+  <tr>
+    <td>{{ x.etapa }}</td><td>{{ x.colaborador }}</td>
+    <td class="mono soft">{{ x.data_inicio|date:"d/m/Y H:i" }}</td>
+    <td class="mono soft">{% if x.data_fim %}{{ x.data_fim|date:"d/m/Y H:i" }}{% else %}<span class="etiqueta ouro">Em curso</span>{% endif %}</td>
+    <td class="mono">{{ x.duracao|duracao }}</td>
+    <td>{% if x.seguinte %}{{ x.seguinte }}{% if x.etapa_seguinte %} · {{ x.etapa_seguinte }}{% endif %}{% else %}<span class="soft">—</span>{% endif %}
+      {% if x.observacoes %}<br><span class="soft small">{{ x.observacoes }}</span>{% endif %}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6" class="vazio">Nenhuma etapa iniciada.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="soft small">Cada etapa mantém o registo do colaborador e dos tempos de execução.</p>
+{% endif %}
+{% endblock %}

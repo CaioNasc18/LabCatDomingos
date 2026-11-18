@@ -1,0 +1,59 @@
+{% load static %}<!doctype html>
+<html lang="pt" data-tema="escuro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Backoffice{% endblock %} · LAB Catarina Domingos</title>
+  <script>try { if (localStorage.getItem("tema") === "claro") document.documentElement.setAttribute("data-tema", "claro"); } catch (e) {}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'core/backoffice.css' %}">
+</head>
+<body>
+{% block corpo %}
+<div class="layout">
+  <aside class="sidebar">
+    <a class="logo" href="{% url 'inicio' %}"><b>LAB</b> Catarina Domingos</a>
+    <button type="button" class="btn secundario pequeno menu-btn" id="abrir-menu" aria-expanded="false">Menu</button>
+    {% for zona in menu %}
+    <nav class="nav-zona" aria-label="{{ zona.nome }}">
+      <h4>{{ zona.nome }}</h4>
+      {% for item in zona.itens %}
+        <a href="{{ item.url }}"{% if item.ativo %} class="ativo" aria-current="page"{% endif %}>{{ item.rotulo }}</a>
+      {% endfor %}
+    </nav>
+    {% endfor %}
+    <div class="sidebar-rodape soft small">Laboratório de prótese dentária</div>
+  </aside>
+
+  <div class="principal">
+    <header class="topo">
+      <div class="soft small">{% block migalhas %}{% endblock %}</div>
+      <div class="topo-acoes">
+        <button type="button" class="icone-btn" id="alternar-tema" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        </button>
+        <a class="icone-btn" href="{% url 'notificacoes' %}" title="Notificações" aria-label="Notificações{% if notificacoes_por_ler %} ({{ notificacoes_por_ler }} por ler){% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg>
+          {% if notificacoes_por_ler %}<span class="contador">{{ notificacoes_por_ler }}</span>{% endif %}
+        </a>
+        <a class="utilizador" href="{% url 'conta' %}" style="color: inherit">
+          {{ request.session.nome }}<small>{{ request.session.perfil }}</small>
+        </a>
+        <a class="icone-btn" href="{% url 'logout' %}" title="Terminar sessão" aria-label="Terminar sessão">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M9 8l-4 4 4 4M5 12h11"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="conteudo">
+      {% for m in messages %}<div class="mensagem {{ m.tags }}" role="status">{{ m }}</div>{% endfor %}
+      {% block conteudo %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
+<script src="{% static 'core/backoffice.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% block titulo %}Utilizadores{% endblock %}
+{% block migalhas %}Gestão{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><div><h1>Utilizadores</h1><p>Todas as contas de acesso, de todos os perfis.</p></div></div>
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Criado</th><th>Último acesso</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+  {% for u in linhas %}
+  <tr>
+    <td>{{ u.nome }}</td><td>{{ u.email }}</td><td>{{ u.perfil }}</td>
+    <td class="mono soft">{{ u.data_criacao|date:"d/m/Y" }}</td>
+    <td class="mono soft">{{ u.ultimo_login|date:"d/m/Y H:i"|default:"—" }}</td>
+    <td>{% if u.ativo %}<span class="etiqueta ouro">Ativo</span>{% else %}<span class="etiqueta">Inativo</span>{% endif %}</td>
+    <td class="acoes">
+      {% if u.id_utilizador != request.session.id_utilizador %}
+      <details class="acao" style="display:inline-block; text-align:left; min-width:220px">
+        <summary>Gerir</summary>
+        <div class="corpo">
+          <form method="post" action="{% url 'gestao:repor_password' u.id_utilizador %}">{% csrf_token %}
+            <label for="pw-{{ u.id_utilizador }}">Nova palavra-passe</label>
+            <input id="pw-{{ u.id_utilizador }}" type="password" name="password" minlength="8" autocomplete="new-password" required>
+            <button class="btn pequeno" type="submit" style="margin-top:6px">Repor</button>
+          </form>
+          <hr>
+          <form method="post" action="{% url 'gestao:ativar_utilizador' u.id_utilizador %}">{% csrf_token %}
+            <button class="btn secundario pequeno" type="submit">{% if u.ativo %}Desativar conta{% else %}Ativar conta{% endif %}</button>
+          </form>
+        </div>
+      </details>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

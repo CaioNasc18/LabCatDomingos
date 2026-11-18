@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% block titulo %}Colaboradores{% endblock %}
+{% block migalhas %}Gestão{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Colaboradores</h1><p>Inclui os administradores, que também executam trabalhos. Todos os colaboradores têm as mesmas funcionalidades.</p></div>
+  <a class="btn" href="{% url 'gestao:colaborador_novo' %}">+ Novo colaborador</a>
+</div>
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Nome</th><th>Contacto</th><th>Perfil</th><th>Trabalhos atuais</th><th>Etapas concluídas</th><th>Último acesso</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+  {% for c in linhas %}
+  <tr>
+    <td>{{ c.nome }}</td>
+    <td>{{ c.email }}<br><span class="soft small">{{ c.telefone|default:"" }}</span></td>
+    <td>{{ c.perfil }}{% if c.e_administrador %} <span class="etiqueta ouro">admin</span>{% endif %}</td>
+    <td class="mono">{{ c.atuais }}</td>
+    <td class="mono">{{ c.realizadas }}</td>
+    <td class="mono soft">{{ c.ultimo_login|date:"d/m/Y H:i"|default:"—" }}</td>
+    <td>{% if c.ativo %}<span class="etiqueta ouro">Ativo</span>{% else %}<span class="etiqueta">Inativo</span>{% endif %}</td>
+    <td class="acoes">
+      {% if c.id_utilizador != request.session.id_utilizador %}
+      <form class="inline" method="post" action="{% url 'gestao:ativar_colaborador' c.id_colaborador %}">{% csrf_token %}
+        <button class="btn secundario pequeno" type="submit">{% if c.ativo %}Desativar{% else %}Ativar{% endif %}</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="8" class="vazio">Sem colaboradores.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% block titulo %}{{ t.nome }}{% endblock %}
+{% block migalhas %}Gestão · Tipos de trabalho{% endblock %}
+{% block conteudo %}
+<a class="voltar" href="{% url 'gestao:tipos' %}">← Tipos de trabalho</a>
+<div class="cabecalho">
+  <div><h1>{{ t.nome }} {% if t.ativo %}<span class="etiqueta ouro">Ativo</span>{% else %}<span class="etiqueta">Inativo</span>{% endif %}</h1><p>{{ t.processo|default:"Sem processo ativo" }}</p></div>
+  <form method="post" action="{% url 'gestao:tipo_guardar' t.id_tipo_trabalho %}">{% csrf_token %}
+    <input type="hidden" name="acao" value="ativar">
+    <button class="btn secundario" type="submit">{% if t.ativo %}Desativar tipo{% else %}Ativar tipo{% endif %}</button>
+  </form>
+</div>
+
+<div class="lado">
+  <section class="cartao">
+    <div class="cartao-titulo"><h2>Etapas do processo</h2><span class="soft small">sem numeração · qualquer ordem</span></div>
+    <div class="tabela-caixa" style="border:0">
+    <table>
+      <thead><tr><th>Etapa</th><th>Obrigatória</th><th>Ativa</th><th>Execuções</th><th></th></tr></thead>
+      <tbody>
+      {% for e in etapas %}
+      <tr>
+        <td><input form="etapa-{{ e.id_etapa }}" type="text" name="nome" value="{{ e.nome }}" aria-label="Nome da etapa" required></td>
+        <td><input form="etapa-{{ e.id_etapa }}" type="checkbox" name="obrigatoria" value="1"{% if e.obrigatoria %} checked{% endif %} aria-label="Obrigatória"></td>
+        <td><input form="etapa-{{ e.id_etapa }}" type="checkbox" name="ativa" value="1"{% if e.ativa %} checked{% endif %} aria-label="Ativa"></td>
+        <td class="mono soft">{{ e.execucoes }}</td>
+        <td class="acoes">
+          <form id="etapa-{{ e.id_etapa }}" method="post" action="{% url 'gestao:etapa_guardar' t.id_tipo_trabalho e.id_etapa %}">{% csrf_token %}
+            <button class="btn secundario pequeno" type="submit">Guardar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <p class="ajuda">Uma etapa já usada não é apagada: desative-a para deixar de aparecer nos trabalhos.</p>
+  </section>
+
+  <aside>
+    <form class="cartao" method="post" action="{% url 'gestao:etapa_nova' t.id_tipo_trabalho %}">{% csrf_token %}
+      <h2>Acrescentar etapa</h2>
+      <div class="campo"><label for="nova-etapa" class="obrigatorio">Nome</label><input id="nova-etapa" type="text" name="nome" required></div>
+      <div class="campo"><label style="display:flex; gap:8px; align-items:center; color:var(--text)"><input type="checkbox" name="obrigatoria" value="1"> Obrigatória</label></div>
+      <button class="btn" type="submit">Acrescentar</button>
+    </form>
+    <form class="cartao" method="post" action="{% url 'gestao:tipo_guardar' t.id_tipo_trabalho %}">{% csrf_token %}
+      <h2>Dados do tipo</h2>
+      <div class="campo"><label for="nome">Nome</label><input id="nome" type="text" name="nome" value="{{ t.nome }}" required></div>
+      <div class="campo"><label for="descricao">Descrição</label><input id="descricao" type="text" name="descricao" value="{{ t.descricao|default:'' }}"></div>
+      <button class="btn secundario" type="submit">Guardar</button>
+    </form>
+  </aside>
+</div>
+{% endblock %}
