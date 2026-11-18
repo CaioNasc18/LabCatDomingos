@@ -1,0 +1,91 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block titulo %}Dashboard{% endblock %}
+{% block migalhas %}Painel{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Dashboard</h1><p>{% now "l, j \d\e F" %}</p></div>
+  <a class="btn" href="{% url 'encomendas:nova' %}">+ Nova encomenda</a>
+</div>
+
+<div class="kpis">
+  <a class="kpi destaque" href="{% url 'encomendas:pedidos' %}" style="color:inherit"><div class="n">{{ n.em_avaliacao }}</div><div class="r">Pedidos por aceitar</div></a>
+  <div class="kpi"><div class="n">{{ ativos }}</div><div class="r">Encomendas ativas</div></div>
+  <div class="kpi{% if n.atrasadas %} alerta{% endif %}"><div class="n">{{ n.atrasadas }}</div><div class="r">Em atraso</div></div>
+  <div class="kpi"><div class="n">{{ n.a_vencer_3_dias }}</div><div class="r">Vencem em 3 dias</div></div>
+  <div class="kpi"><div class="n">{{ n.em_espera }}</div><div class="r"><span class="ponto" style="--c:var(--st-em-espera)"></span>Em espera</div></div>
+  <div class="kpi"><div class="n">{{ n.entregues }}</div><div class="r"><span class="ponto" style="--c:var(--st-entregue)"></span>Entregues</div></div>
+</div>
+
+<div class="cartao" style="margin-bottom:16px">
+  <div class="cartao-titulo"><h2>Encomendas por estado</h2><a class="small" href="{% url 'encomendas:lista' %}">Ver todas</a></div>
+  <div class="botoes">
+    <a class="estado por-iniciar" href="{% url 'encomendas:lista' %}?estado=Por+iniciar">Por iniciar · {{ n.por_iniciar }}</a>
+    <a class="estado em-processamento" href="{% url 'encomendas:lista' %}?estado=Em+processamento">Em processamento · {{ n.em_processamento }}</a>
+    <a class="estado em-espera" href="{% url 'encomendas:lista' %}?estado=Em+espera">Em espera · {{ n.em_espera }}</a>
+    <a class="estado em-prova" href="{% url 'encomendas:lista' %}?estado=Em+prova">Em prova · {{ n.em_prova }}</a>
+    <a class="estado concluido" href="{% url 'encomendas:lista' %}?estado=Concluído">Concluído · {{ n.concluidas }}</a>
+    <a class="estado entregue" href="{% url 'encomendas:lista' %}?estado=Entregue">Entregue · {{ n.entregues }}</a>
+  </div>
+</div>
+
+<div class="grelha-2">
+  <div class="cartao">
+    <div class="cartao-titulo"><h2>Prazos próximos e em atraso</h2></div>
+    <table>
+      <thead><tr><th>Encomenda</th><th>Cliente</th><th>Estado</th><th>Prazo</th></tr></thead>
+      <tbody>
+      {% for p in prazos %}
+      <tr>
+        <td class="mono"><a href="{% url 'encomendas:detalhe' p.id_encomenda %}">{{ p.codigo }}</a></td>
+        <td>{{ p.cliente }}</td>
+        <td><span class="estado {{ p.estado|estado_css }}">{{ p.estado }}</span></td>
+        <td class="mono {{ p.dias|prazo_css }}">{{ p.data_limite|date:"d/m" }} · {{ p.dias|dias }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="vazio">Nenhuma encomenda em atraso ou a vencer nos próximos 3 dias.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cartao">
+    <div class="cartao-titulo"><h2>Pedidos por aceitar</h2><a class="small" href="{% url 'encomendas:pedidos' %}">Ver todos</a></div>
+    <table>
+      <thead><tr><th>Pedido</th><th>Cliente</th><th>Trabalhos</th><th>Recebido</th></tr></thead>
+      <tbody>
+      {% for p in pedidos %}
+      <tr>
+        <td class="mono"><a href="{% url 'encomendas:detalhe' p.id_encomenda %}">{{ p.codigo }}</a></td>
+        <td>{{ p.cliente }}</td><td>{{ p.tipos|default:"—" }}</td>
+        <td class="mono soft">{{ p.data_criacao|date:"d/m H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="vazio">Sem pedidos por aceitar.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="cartao" style="margin-top:16px">
+  <div class="cartao-titulo"><h2>Os meus trabalhos</h2><a class="small" href="{% url 'trabalhos:meus' %}">Abrir execução</a></div>
+  <table>
+    <thead><tr><th>Encomenda</th><th>Trabalho</th><th>Etapa</th><th>Estado</th><th>Atribuição</th><th>Prazo</th></tr></thead>
+    <tbody>
+    {% for t in meus %}
+    <tr>
+      <td class="mono">{{ t.codigo }}</td>
+      <td><a href="{% url 'trabalhos:detalhe' t.id_encomenda_tipo %}">{{ t.tipo_trabalho }}</a></td>
+      <td>{{ t.etapa }}</td>
+      <td><span class="estado {{ t.estado_trabalho|estado_css }}">{{ t.estado_trabalho }}</span></td>
+      <td class="soft">{{ t.atribuicao }}</td>
+      <td class="mono {{ t.dias_ate_limite|prazo_css }}">{{ t.dias_ate_limite|dias }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" class="vazio">Sem trabalhos atribuídos.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

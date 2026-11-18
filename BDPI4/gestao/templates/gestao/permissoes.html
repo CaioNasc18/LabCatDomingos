@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% block titulo %}Permissões{% endblock %}
+{% block migalhas %}Sistema{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><div><h1>Permissões</h1><p>Matriz perfil × funcionalidade. O menu de cada perfil é construído a partir daqui. As alterações aplicam-se no próximo início de sessão.</p></div></div>
+{% for plataforma, funcs in grupos %}
+<h2 style="margin-top:20px">{{ plataforma }}</h2>
+<div class="tabela-caixa">
+<table class="matriz">
+  <thead><tr><th>Módulo</th><th>Funcionalidade</th>{% for p in perfis %}<th class="marca">{{ p.nome }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for f in funcs %}
+  <tr>
+    <td class="soft">{{ f.modulo|default:"—" }}</td><td>{{ f.nome }}</td>
+    {% for id_perfil, sim in f.marcas %}
+    <td class="marca">
+      <form class="inline" method="post" action="{% url 'gestao:alternar_permissao' id_perfil f.id_funcionalidade %}">{% csrf_token %}
+        <button class="marca-btn{% if sim %} sim{% endif %}" type="submit" aria-label="{% if sim %}Retirar{% else %}Dar{% endif %} {{ f.nome }}" title="{% if sim %}Retirar{% else %}Dar{% endif %}">{% if sim %}✓{% endif %}</button>
+      </form>
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endfor %}
+{% endblock %}

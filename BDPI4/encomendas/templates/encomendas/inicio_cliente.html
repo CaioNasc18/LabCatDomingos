@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block titulo %}Início{% endblock %}
+{% block migalhas %}Área do cliente{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Olá, {{ request.session.nome }}</h1><p>Os seus casos, sempre acompanhados.</p></div>
+  <a class="btn" href="{% url 'encomendas:nova' %}">+ Nova encomenda</a>
+</div>
+
+<div class="kpis">
+  {% for nome, n in contagens %}
+  <div class="kpi"><div class="n">{{ n }}</div><div class="r"><span class="ponto" style="--c: var(--st-{{ nome|estado_css }})"></span>{{ nome }}</div></div>
+  {% endfor %}
+</div>
+
+<div class="cartao">
+  <div class="cartao-titulo"><h2>Encomendas recentes</h2><a class="small" href="{% url 'encomendas:minhas' %}">Ver todas</a></div>
+  <table>
+    <thead><tr><th>Encomenda</th><th>Trabalhos</th><th>Estado</th><th>Criada</th><th>Prazo</th></tr></thead>
+    <tbody>
+    {% for e in recentes %}
+    <tr>
+      <td class="mono"><a href="{% url 'encomendas:detalhe_cliente' e.id_encomenda %}">{{ e.codigo }}</a></td>
+      <td>{{ e.tipos|default:"—" }}</td>
+      <td><span class="estado {{ e.estado|estado_css }}">{{ e.estado }}</span></td>
+      <td class="mono soft">{{ e.data_criacao|date:"d/m/Y" }}</td>
+      <td class="mono">{{ e.data_limite|date:"d/m/Y"|default:"A definir" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="vazio">Ainda não fez encomendas. <a href="{% url 'encomendas:nova' %}">Criar a primeira</a>.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

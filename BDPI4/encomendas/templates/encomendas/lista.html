@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block titulo %}Todas as encomendas{% endblock %}
+{% block migalhas %}Encomendas{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+  <div><h1>Todas as encomendas</h1><p>{{ linhas|length }} encomenda{{ linhas|length|pluralize }}</p></div>
+  <a class="btn" href="{% url 'encomendas:nova' %}">+ Nova encomenda</a>
+</div>
+<form class="filtros" method="get">
+  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar código, cliente ou paciente" aria-label="Pesquisar">
+  <select name="estado" aria-label="Estado" onchange="this.form.submit()">
+    <option value="">Todos os estados</option>
+    {% for s in estados %}<option{% if s == estado %} selected{% endif %}>{{ s }}</option>{% endfor %}
+  </select>
+  <button class="btn secundario" type="submit">Filtrar</button>
+  {% if request.GET.q or estado %}<a class="small" href="{% url 'encomendas:lista' %}">Limpar</a>{% endif %}
+</form>
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Código</th><th>Cliente</th><th>Trabalhos</th><th>Estado</th><th>Criada</th><th>Prazo</th></tr></thead>
+  <tbody>
+  {% for e in linhas %}
+  <tr>
+    <td class="mono"><a href="{% url 'encomendas:detalhe' e.id_encomenda %}">{{ e.codigo }}</a></td>
+    <td>{{ e.cliente }}</td>
+    <td>{{ e.tipos|default:"—" }}</td>
+    <td><span class="estado {{ e.estado|estado_css }}">{{ e.estado }}</span></td>
+    <td class="mono soft">{{ e.data_criacao|date:"d/m/Y" }}</td>
+    <td class="mono {% if e.estado != 'Concluído' and e.estado != 'Entregue' %}{{ e.dias|prazo_css }}{% endif %}">{{ e.data_limite|date:"d/m/Y"|default:"—" }}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6" class="vazio">Nenhuma encomenda encontrada.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

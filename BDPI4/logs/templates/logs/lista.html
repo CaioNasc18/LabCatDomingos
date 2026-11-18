@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% block titulo %}Logs{% endblock %}
+{% block migalhas %}Sistema{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><div><h1>Logs</h1><p>Registados automaticamente pelos triggers de auditoria da base de dados · últimos 300.</p></div></div>
+<form class="filtros" method="get">
+  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Utilizador" aria-label="Utilizador">
+  <select name="tabela" aria-label="Tabela">
+    <option value="">Todas as tabelas</option>
+    {% for t in tabelas %}<option{% if t.tabela_afetada == tabela %} selected{% endif %}>{{ t.tabela_afetada }}</option>{% endfor %}
+  </select>
+  <select name="acao" aria-label="Ação">
+    <option value="">Todas as ações</option>
+    {% for a in acoes %}<option{% if a.acao == acao %} selected{% endif %}>{{ a.acao }}</option>{% endfor %}
+  </select>
+  <button class="btn secundario" type="submit">Filtrar</button>
+  {% if tabela or acao or request.GET.q %}<a class="small" href="{% url 'logs:lista' %}">Limpar</a>{% endif %}
+</form>
+<div class="tabela-caixa">
+<table>
+  <thead><tr><th>Data</th><th>Utilizador</th><th>Ação</th><th>Tabela</th><th>Registo</th><th>Detalhes</th></tr></thead>
+  <tbody>
+  {% for l in linhas %}
+  <tr>
+    <td class="mono soft">{{ l.data_hora|date:"d/m/Y H:i:s" }}</td>
+    <td>{{ l.utilizador }}</td>
+    <td><span class="etiqueta{% if l.acao == 'DELETE' %} ouro{% endif %}">{{ l.acao }}</span></td>
+    <td class="mono">{{ l.tabela_afetada|default:"—" }}</td>
+    <td class="mono">{{ l.registo_id|default:"—" }}</td>
+    <td>{% if l.detalhes %}<details><summary class="small" style="cursor:pointer">Ver</summary><pre class="mono small" style="white-space:pre-wrap; max-width:520px; margin:6px 0 0">{{ l.detalhes }}</pre></details>{% else %}<span class="soft">—</span>{% endif %}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6" class="vazio">Sem registos.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
