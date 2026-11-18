@@ -116,4 +116,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"   # python manage.py collectstatic (só e
 # em produção têm de ir para o armazenamento S3 previsto na arquitetura.
 MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
 TAMANHO_MAXIMO_FICHEIRO = 250 * 1024 * 1024        # 250 MB, como no protótipo
+
+# Render: o HTTPS termina no proxy do Render
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [
+    f"https://*{h}" if h.startswith(".") else f"https://{h}"
+    for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")
+]
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
