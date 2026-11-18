@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Mark from '../Mark/Mark';
-import styles from './Navbar.module.css';
+import { Link } from 'react-router-dom';
+import Mark from './Mark';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -8,11 +8,11 @@ function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className={styles.header}>
+    <header className="site-header">
       <Mark />
 
       <nav
-        className={menuOpen ? `${styles.nav} ${styles.navOpen}` : styles.nav}
+        className={menuOpen ? 'nav nav--open' : 'nav'}
         aria-label="Navegação principal"
       >
         <a href="#laboratorio" onClick={closeMenu}>Laboratório</a>
@@ -22,12 +22,12 @@ function Navbar() {
         <a href="#contactos" onClick={closeMenu}>Contactos</a>
       </nav>
 
-      <button className={styles.cta} type="button">
+      <Link className="header-cta" to="/area-reservada">
         Área reservada <span>↗</span>
-      </button>
+      </Link>
 
       <button
-        className={styles.menuButton}
+        className="menu-button"
         type="button"
         aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
         aria-expanded={menuOpen}
